@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 /*
   TODO:
     [Done] Comments
-    Support compressed sav
+    [Done] Support compressed sav
     Test for vertical maps
     [Done] Loop flag
     [Done] Frame rate flag
@@ -40,4 +40,5 @@ int main(int argc, char* argv[]) {
     Fix negative offset
     Better error handling
     Show borders and cities?
+    second.SAV standard.SAV core dump
 */

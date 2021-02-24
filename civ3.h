@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <string.h>
+#include "decompress.h"
 
 namespace Civ3 {
   // The dimensions of the tiles and tile sections in tiles.png
@@ -75,7 +76,8 @@ namespace Civ3 {
   class SAV {
       char* buffer; // The civ 3 sav file hex data; *not* null terminated!
       int buflength; // Length of data in bytes
-      size_t end; // Memory location of where the buffer ends. Why is this size_t and not char*
+      char* end; // Memory location of where the buffer ends
+      Decompress* d;
 
       bool gotostring(char*);
       char* findstring(char*, char* pointer);
@@ -104,16 +106,26 @@ namespace Civ3 {
       std::vector<char> vbuf(std::istreambuf_iterator<char>(in), {});
       buflength = vbuf.size();
       buffer = vbuf.data();
-      end = (size_t)buffer + buflength;
+      end = buffer + buflength;
 
-      if (gotostring(CIV3)) { // If the sav file is decompressed
-        this->settiledata();
-        this->setleaderdata();
-        this->seteventdata();
+      // First 4 bytes should be the "CIV3" header string
+      // If they're not, try decompressing the file
+      if (strncmp(buffer, CIV3, 4)) {
+        d = new Decompress(buffer, buflength);
 
-      } else {
+        buffer = d->output.data();
+        buflength = d->output.size();
+        end = buffer + buflength;
+      }
+
+      // If still not the right header, give up
+      if (strncmp(buffer, CIV3, 4)) {
         std::cerr << filename << " was not a valid civ 3 sav file." << std::endl;
       }
+
+      this->settiledata();
+      this->setleaderdata();
+      this->seteventdata();
 
     } else {
       std::cerr << "There was an error opening file " << filename << std::endl;
@@ -187,16 +199,13 @@ namespace Civ3 {
   };
 
   char* SAV::findstring(char* search, char* pointer) {
-    size_t index = (size_t)pointer;
-
-    while (index < end) { // Make sure we don't go past the end of the char buffer. That would be bad
+    int i = 0;
+    while (pointer < end - 4) { // Make sure we don't go past the end of the char buffer. That would be bad
       if (strncmp(pointer, search, 4) == 0) {
         return pointer;
       }
       pointer++;
-      index++;
     }
-
     return NULL;
   };
 

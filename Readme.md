@@ -1,6 +1,6 @@
 # Civ 3 Enhanced Map Replays
 
-`
+```
 USAGE:
 
    ./map  [-x <integer>] [-y <integer>] [-f <integer>] [-s] [-l] [--]
@@ -41,4 +41,4 @@ Where:
    Utility for creating pretty video replay maps from Civilization 3 SAV
    files
 
-`
+```
