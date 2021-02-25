@@ -94,6 +94,7 @@ namespace Civ3 {
       Tile* tiles;
       Event* eventhead;
       int leaders[32];
+      bool valid = false;
 
       SAV(std::string);
   };
@@ -121,11 +122,12 @@ namespace Civ3 {
       // If still not the right header, give up
       if (strncmp(buffer, CIV3, 4)) {
         std::cerr << filename << " was not a valid civ 3 sav file." << std::endl;
+      } else {
+        this->settiledata();
+        this->setleaderdata();
+        this->seteventdata();
+        valid = true;
       }
-
-      this->settiledata();
-      this->setleaderdata();
-      this->seteventdata();
 
     } else {
       std::cerr << "There was an error opening file " << filename << std::endl;

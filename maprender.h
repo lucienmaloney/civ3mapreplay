@@ -98,11 +98,11 @@ namespace Civ3 {
     template<typename T> void draw(sf::RenderTexture*, T*, int, int);
 
     public:
-      MapRender(std::string, int, int, int, bool, bool);
+      MapRender(SAV*, int, int, int, bool, bool);
   };
 
-  MapRender::MapRender(std::string filename, int xoffset, int yoffset, int framerate, bool stretch, bool loop) {
-    this->sav = new SAV(filename);
+  MapRender::MapRender(SAV* sav, int xoffset, int yoffset, int framerate, bool stretch, bool loop) {
+    this->sav = sav;
     // Remove negatives from offsets
     this->xo = posmod(xoffset, sav->mapwidth * 2);
     this->yo = posmod(yoffset, sav->mapheight * 2);
@@ -113,19 +113,19 @@ namespace Civ3 {
     this->mapheight = (sav->mapheight / 2 + sav->wrapy - 1) * TILEHEIGHT;
     window = new sf::RenderWindow(sf::VideoMode::getDesktopMode(), "Civ 3 Enhanced Replays");
     if (!texture.loadFromFile("tiles.png")) {
-      std::cerr << "Error loading texture. Try running again." << std::endl;
+      std::cerr << "Error loading texture. Does the file 'tiles.png' exist in the current directory?" << std::endl;
+    } else {
+      // Setting up the tile shape. Should this be in its own function? Eh, whatever
+      diamond.setPointCount(4);
+      diamond.setPoint(0, sf::Vector2f(0, TILEHEIGHT / 2));
+      diamond.setPoint(1, sf::Vector2f(TILEWIDTH / 2, 0));
+      diamond.setPoint(2, sf::Vector2f(TILEWIDTH, TILEHEIGHT / 2));
+      diamond.setPoint(3, sf::Vector2f(TILEWIDTH / 2, TILEHEIGHT));
+
+      setmapsprite();
+
+      render();
     }
-
-    // Setting up the tile shape. Should this be in its own function? Eh, whatever
-    diamond.setPointCount(4);
-    diamond.setPoint(0, sf::Vector2f(0, TILEHEIGHT / 2));
-    diamond.setPoint(1, sf::Vector2f(TILEWIDTH / 2, 0));
-    diamond.setPoint(2, sf::Vector2f(TILEWIDTH, TILEHEIGHT / 2));
-    diamond.setPoint(3, sf::Vector2f(TILEWIDTH / 2, TILEHEIGHT));
-
-    setmapsprite();
-
-    render();
   }
 
   int MapRender::posmod(int a, int b) {

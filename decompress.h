@@ -58,10 +58,10 @@ namespace Civ3 {
     dictionarysize = 64 << dictionarybits;
 
     if (header != 0 || dictionarysize > BUFFER_LENGTH) {
-      std::cerr << "Handle error" << std::endl;
+      output.push_back('-');
+    } else {
+      decompress();
     }
-
-    decompress();
   }
 
   void Decompress::decompress() {

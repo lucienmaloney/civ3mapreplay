@@ -21,7 +21,10 @@ int main(int argc, char* argv[]) {
   cmd.add(xoffset);
   cmd.parse(argc, argv);
 
-  Civ3::MapRender mr(savfile.getValue(), xoffset.getValue(), yoffset.getValue(), framerate.getValue(), stretch.getValue(), loop.getValue());
+  Civ3::SAV sav(savfile.getValue());
+  if (sav.valid) {
+    Civ3::MapRender mr(&sav, xoffset.getValue(), yoffset.getValue(), framerate.getValue(), stretch.getValue(), loop.getValue());
+  }
 
   return 0;
 };
@@ -38,7 +41,7 @@ int main(int argc, char* argv[]) {
     [Done] Fix color tiles not wrapping
     [Done] Fix offset flags
     [Done] Fix negative offset
-    Better error handling
+    [Done] Better error handling
     Show borders and cities?
     [Done] second.SAV standard.SAV core dump
 */
