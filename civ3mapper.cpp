@@ -40,5 +40,5 @@ int main(int argc, char* argv[]) {
     Fix negative offset
     Better error handling
     Show borders and cities?
-    second.SAV standard.SAV core dump
+    [Done] second.SAV standard.SAV core dump
 */

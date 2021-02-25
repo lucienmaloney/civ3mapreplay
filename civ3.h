@@ -176,25 +176,27 @@ namespace Civ3 {
 
     // Each RPLE from here on marks a game event, though only some are tile update events
     char* rple = findstring(RPLE, buffer);
-    // Each RPLT marks a new turn, which is used to determine the turn number of RPLE events
-    char* rplt = findstring(RPLT, rple);
+    if (rple != NULL) {
+      // Each RPLT marks a new turn, which is used to determine the turn number of RPLE events
+      char* rplt = findstring(RPLT, rple);
 
-    eventhead = new Event(turn, rple);
-    Event* e = eventhead;
+      eventhead = new Event(turn, rple);
+      Event* e = eventhead;
 
-    while (rple != NULL) {
-      while (rple > rplt && rplt != NULL) {
-        rplt = findstring(RPLT, ++rplt);
-        turn++;
+      while (rple != NULL) {
+        while (rple > rplt && rplt != NULL) {
+          rplt = findstring(RPLT, ++rplt);
+          turn++;
+        }
+
+        // If event type is a tile change
+        if (*(rple + 8) == 6) {
+          e->next = new Event(turn, rple);
+          e = e->next;
+        }
+
+        rple = findstring(RPLE, ++rple);
       }
-
-      // If event type is a tile change
-      if (*(rple + 8) == 6) {
-        e->next = new Event(turn, rple);
-        e = e->next;
-      }
-
-      rple = findstring(RPLE, ++rple);
     }
   };
 
