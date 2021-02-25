@@ -90,6 +90,7 @@ namespace Civ3 {
     void handleresize();
     void handleevents();
     void render();
+    int posmod(int, int);
     sf::Vector2f mapposition(int, int);
     // A template because we need to be able to pass both Sprites and Shapes, which inherit from both
     // sf::Drawable and sf::Transformable, and I don't know enouogh about c++ types to make that work
@@ -102,8 +103,9 @@ namespace Civ3 {
 
   MapRender::MapRender(std::string filename, int xoffset, int yoffset, int framerate, bool stretch, bool loop) {
     this->sav = new SAV(filename);
-    this->xo = xoffset;
-    this->yo = yoffset;
+    // Remove negatives from offsets
+    this->xo = posmod(xoffset, sav->mapwidth * 2);
+    this->yo = posmod(yoffset, sav->mapheight * 2);
     this->framerate = framerate;
     this->stretch = stretch;
     this->loop = loop;
@@ -124,6 +126,10 @@ namespace Civ3 {
     setmapsprite();
 
     render();
+  }
+
+  int MapRender::posmod(int a, int b) {
+    return ((a % b) + b) % b;
   }
 
   sf::Vector2f MapRender::mapposition(int x, int y) {

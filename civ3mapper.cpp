@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     [Done] Fix Colors
     [Done] Fix color tiles not wrapping
     [Done] Fix offset flags
-    Fix negative offset
+    [Done] Fix negative offset
     Better error handling
     Show borders and cities?
     [Done] second.SAV standard.SAV core dump
