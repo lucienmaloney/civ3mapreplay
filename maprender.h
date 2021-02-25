@@ -88,6 +88,7 @@ namespace Civ3 {
 
     void setmapsprite();
     void handleresize();
+    void setscale();
     void handleevents();
     void render();
     int posmod(int, int);
@@ -182,7 +183,9 @@ namespace Civ3 {
     view = window->getDefaultView();
     view.reset(sf::FloatRect(0.f, 0.f, event.size.width, event.size.height));
     window->setView(view);
+  }
 
+  void MapRender::setscale() {
     // Determine the correct factor to scale by so that the contents doesn't overflow either horizontally or vertically
     sf::Vector2u size = window->getSize();
     scalex = size.x * 1.f / mapwidth;
@@ -223,7 +226,6 @@ namespace Civ3 {
     int turn = 0;
     while (window->isOpen()) {
       handleevents();
-
       window->clear(sf::Color::Black);
 
       // This loop updates the tiles as they change with the lighter color
@@ -246,6 +248,7 @@ namespace Civ3 {
 
       sf::Sprite tilessprite(tiles.getTexture());
 
+      setscale();
       mapsprite->setScale(sf::Vector2f(scalex, scaley));
       mapsprite->setPosition(sf::Vector2f(posx, posy));
       tilessprite.setScale(sf::Vector2f(scalex, scaley));
